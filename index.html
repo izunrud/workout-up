@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <!-- PWA / TWA Required Meta Tags -->
   <meta name="theme-color" content="#0B0B0B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  
   <title>WORKOUT UP · единый стиль</title>
   <style>
     /* ===== ЕДИНАЯ СИСТЕМА ДИЗАЙНА ===== */
@@ -1345,6 +1352,18 @@
       }
       if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
     })();
+  </script>
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          console.log('Service Worker зарегистрирован с областью:', registration.scope);
+        }, function(err) {
+          console.log('Ошибка регистрации Service Worker:', err);
+        });
+      });
+    }
   </script>
 </body>
 </html>
