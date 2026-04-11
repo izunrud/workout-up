@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0B0B">
+  <title>WORKOUT UP · единый стиль</title>
+  <style>
+    /* ===== ЕДИНАЯ СИСТЕМА ДИЗАЙНА ===== */
+    :root {
+      --bg: #0B0B0B;
+      --surface: #141414;
+      --surface-elevated: #1C1C1C;
+      --border: #2A2A2A;
+      --border-light: #3A3A3A;
+      --accent: #00E676;
+      --accent-dim: #00B85C;
+      --text-primary: #F0F0F0;
+      --text-secondary: #A0A0A0;
+      --text-muted: #707070;
+      --danger: #FF4D4D;
+      --danger-dim: #CC3333;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.6);
+      
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 12px;
+      --space-lg: 16px;
+      --space-xl: 20px;
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    html, body { width: 100%; height: 100%; overflow-x: hidden; background: var(--bg); }
+    body { 
+      color: var(--text-primary); 
+      font-family: var(--font-sans); 
+      line-height: 1.5; 
+      padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); 
+      min-height: 100vh; 
+      -webkit-font-smoothing: antialiased; 
+    }    .app { max-width: 440px; margin: 0 auto; padding: 0 var(--space-lg); width: 100%; }
+    
+    /* ===== ТИПОГРАФИКА ===== */
+    .header { padding: var(--space-xl) 0 var(--space-md); border-bottom: 1px solid var(--border); margin-bottom: var(--space-lg); }
+    .header h1 { font-size: 22px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--text-primary); }
+    .header h1 span { color: var(--accent); }
+    
+    .view { display: none; animation: viewEnter 0.25s var(--ease-snap) both; }
+    .view.active { display: block; }
+    @keyframes viewEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .panel { 
+      background: var(--surface); 
+      border-radius: var(--radius-md); 
+      padding: var(--space-lg); 
+      margin-bottom: var(--space-lg); 
+      border: 1px solid var(--border); 
+      box-shadow: var(--shadow-sm); 
+    }
+    .panel-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: var(--space-md); 
+      flex-wrap: wrap; 
+      gap: var(--space-sm); 
+    }
+    .panel-title { 
+      font-size: 13px; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      color: var(--text-secondary); 
+      font-weight: 700; 
+    }
+    .panel-total { 
+      background: rgba(0, 230, 118, 0.12);
+      color: var(--accent);
+      padding: 5px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-radius: 20px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      font-family: var(--font-mono);
+    }
+    .panel-total svg { width: 12px; height: 12px; fill: var(--accent); }    
+    .workout-date { 
+      text-align: center; 
+      padding: 6px 0 var(--space-md); 
+      font-family: var(--font-mono); 
+      font-size: 14px; 
+      color: var(--text-secondary); 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      font-weight: 500; 
+      border-bottom: 1px dashed var(--border); 
+      margin-bottom: var(--space-lg); 
+    }
+    
+    .workout-name-wrap { position: relative; margin-bottom: var(--space-lg); }
+    .workout-name-input { 
+      width: 100%; 
+      padding: 14px 48px 14px 14px; 
+      background: var(--surface); 
+      border: 1.5px solid var(--border); 
+      border-radius: var(--radius-md); 
+      color: var(--accent); 
+      font-family: var(--font-sans); 
+      font-size: 15px; 
+      font-weight: 600; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      text-align: center; 
+      outline: none; 
+      transition: border-color 0.2s, box-shadow 0.2s; 
+      -webkit-appearance: none; 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); 
+    }
+    .workout-name-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.15), inset 0 2px 4px rgba(0,0,0,0.2); }
+    .workout-name-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 13px; }
+    .template-btn { 
+      position: absolute; 
+      right: 8px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      background: var(--surface-elevated); 
+      border: 1.5px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      color: var(--text-muted); 
+      width: 40px; 
+      height: 40px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer;       transition: all 0.15s; 
+      padding: 0; 
+    }
+    .template-btn:active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .template-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    
+    .input { background: var(--surface); border-radius: var(--radius-sm); border: 1.5px solid var(--border); transition: border-color 0.2s, box-shadow 0.2s; position: relative; }
+    .input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.2); }
+    .input input { 
+      width: 100%; 
+      background: transparent; 
+      border: none; 
+      color: var(--text-primary); 
+      font-family: var(--font-mono); 
+      font-size: 15px; 
+      padding: 12px 12px; 
+      outline: none; 
+      -webkit-appearance: none; 
+    }
+    .input input::placeholder { color: var(--text-muted); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; font-weight: 400; }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+    
+    .autocomplete-list { 
+      position: absolute; 
+      top: calc(100% + 4px); 
+      left: 0; 
+      right: 0; 
+      background: var(--surface-elevated); 
+      border: 1px solid var(--border-light); 
+      border-radius: var(--radius-sm); 
+      max-height: 220px; 
+      overflow-y: auto; 
+      z-index: 400; 
+      display: none; 
+      box-shadow: var(--shadow-md); 
+    }
+    .autocomplete-item { 
+      padding: 12px 14px; 
+      font-family: var(--font-mono); 
+      font-size: 13px; 
+      color: var(--text-primary); 
+      text-transform: uppercase; 
+      cursor: pointer; 
+      border-bottom: 1px solid var(--border); 
+    }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover, .autocomplete-item.selected { background: var(--surface); color: var(--accent); }
+    
+    .btn { 
+      width: 100%;       padding: 14px 18px; 
+      background: var(--surface-elevated); 
+      border: 1.5px solid var(--border); 
+      border-radius: var(--radius-md); 
+      color: var(--text-primary); 
+      font-weight: 600; 
+      font-size: 13px; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      cursor: pointer; 
+      transition: all 0.15s; 
+      -webkit-appearance: none; 
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+      box-shadow: var(--shadow-sm); 
+      min-height: 52px; 
+    }
+    .btn:active { transform: scale(0.98); background: var(--surface); box-shadow: none; }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; box-shadow: 0 4px 10px rgba(0, 230, 118, 0.25); }
+    .btn-primary:active { background: var(--accent-dim); border-color: var(--accent-dim); box-shadow: 0 2px 4px rgba(0, 230, 118, 0.3); }
+    .btn-add-set { 
+      background: transparent; 
+      border: 2px dashed var(--border-light); 
+      color: var(--text-secondary); 
+      font-weight: 600; 
+      margin-bottom: var(--space-xl); 
+      box-shadow: none; 
+    }
+    .btn-add-set svg { width: 20px; height: 20px; stroke: currentColor; }
+    .btn-add-set:active { border-color: var(--accent); color: var(--accent); background: rgba(0, 230, 118, 0.05); }
+    .btn-add-set:disabled { opacity: 0.3; pointer-events: none; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none; }
+    
+    .sets-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); margin-bottom: var(--space-lg); }
+    .ex-col { 
+      background: var(--surface); 
+      border-radius: var(--radius-md); 
+      padding: var(--space-md); 
+      border: 1px solid var(--border); 
+      box-shadow: var(--shadow-sm); 
+    }
+    .ex-header { display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-md); flex-wrap: wrap; }
+    .ex-name { 
+      font-family: var(--font-mono); 
+      font-size: 14px; 
+      color: var(--accent); 
+      text-transform: uppercase; 
+      font-weight: 700;       letter-spacing: 0.8px; 
+      line-height: 1.2; 
+      word-break: break-word; 
+      flex: 1; 
+      min-width: 110px; 
+    }
+    .ex-edit-btn { 
+      background: var(--surface-elevated); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      color: var(--text-muted); 
+      font-size: 12px; 
+      padding: 6px 10px; 
+      text-transform: uppercase; 
+      cursor: pointer; 
+      transition: all 0.15s; 
+      font-family: var(--font-mono); 
+      font-weight: 600; 
+      min-width: 50px; 
+      text-align: center; 
+    }
+    .ex-edit-btn:active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .ex-edit-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .ex-badge { 
+      background: rgba(0, 230, 118, 0.12); 
+      color: var(--accent); 
+      padding: 5px 8px; 
+      font-size: 11px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      border-radius: 20px; 
+      white-space: nowrap; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 5px; 
+      border: 1px solid rgba(0, 230, 118, 0.3); 
+    }
+    .ex-badge svg { width: 12px; height: 12px; fill: var(--accent); }
+    
+    .ex-name-input { 
+      font-family: var(--font-mono); 
+      font-size: 14px; 
+      color: var(--accent); 
+      text-transform: uppercase; 
+      font-weight: 700; 
+      letter-spacing: 0.8px; 
+      background: transparent; 
+      border: 1px solid var(--border-light); 
+      border-radius: var(--radius-sm); 
+      padding: 6px 8px;       outline: none; 
+      width: auto; 
+      min-width: 130px; 
+    }
+    .ex-name-input:focus { border-color: var(--accent); }
+    
+    .ex-set-edit-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .ex-set-edit-row .set-num { color: var(--text-muted); font-size: 11px; min-width: 28px; }
+    .ex-set-edit-row .input { flex: 1; }
+    .ex-set-edit-row .input input { padding: 8px 6px; font-size: 13px; text-align: center; }
+    .ex-set-edit-row .del-set { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; padding: 4px 6px; }
+    .ex-set-edit-row .del-set:active { color: var(--danger); }
+    
+    .ex-add-set-btn { 
+      background: none; 
+      border: 1px dashed var(--border-light); 
+      color: var(--text-muted); 
+      font-size: 11px; 
+      padding: 8px 10px; 
+      border-radius: var(--radius-sm); 
+      cursor: pointer; 
+      margin-top: 10px; 
+      text-transform: uppercase; 
+      font-family: var(--font-mono); 
+      width: 100%; 
+      font-weight: 600; 
+    }
+    .ex-add-set-btn:active { border-color: var(--accent); color: var(--accent); background: rgba(0,230,118,0.05); }
+    
+    .ex-sets { display: flex; flex-direction: column; gap: 4px; }
+    .ex-set { 
+      font-family: var(--font-mono); 
+      font-size: 14px; 
+      color: var(--text-primary); 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 6px 0; 
+      border-bottom: 1px solid var(--border); 
+    }
+    .ex-set:last-child { border-bottom: none; }
+    .ex-set .set-num { color: var(--text-muted); font-size: 11px; min-width: 28px; }
+    .ex-set .set-data { text-align: right; flex: 1; font-weight: 500; }
+    
+    /* ===== HISTORY ===== */
+    .history-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md); position: relative; }
+    .history-title-section { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); font-weight: 700; }
+    
+    /* Кнопка меню (Вариант В) */
+    .history-menu-btn {      background: transparent;
+      border: none;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+      padding: 0;
+      border-radius: 40px;
+    }
+    .history-menu-btn:active { color: var(--accent); background: rgba(0, 230, 118, 0.1); }
+    .history-menu-btn svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; fill: none; }
+    
+    .history-menu-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      min-width: 180px;
+      z-index: 300;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.95);
+      transition: opacity 0.2s var(--ease-snap), transform 0.2s var(--ease-snap), visibility 0.2s;
+      overflow: hidden;
+    }
+    .history-menu-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    .history-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .history-menu-item:last-child { border-bottom: none; }
+    .history-menu-item:hover { background: var(--surface); }
+    .history-menu-item:active { background: var(--accent); color: #000; }
+    .history-menu-item svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+    .history-menu-item.danger { color: var(--danger); }
+    .history-menu-item.danger:active { background: var(--danger); color: #000; }
+    
+    /* Неактивные пункты меню */
+    .history-menu-item.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    
+    .history-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-lg); gap: 12px; }
+    .history-nav-btn { background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 6px 12px; transition: all 0.2s; }
+    .history-nav-btn:active { color: var(--accent); }
+    .history-period-label { flex: 1; text-align: center; font-family: var(--font-mono); font-size: 14px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+    
+    .history-folder { margin-bottom: 6px; }
+    .history-folder-header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 12px 14px; 
+      background: var(--surface-elevated); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-md); 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    .history-folder-header:active { background: var(--surface); border-color: var(--border-light); }
+    .history-folder-title { font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .history-folder-meta { display: flex; align-items: center; gap: 8px; }
+    .history-folder-count { background: rgba(0, 230, 118, 0.15); color: var(--accent); padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: var(--font-mono); }
+    .history-folder-arrow { color: var(--text-muted); font-size: 12px; transition: transform 0.3s var(--ease-snap); }
+    .history-folder.expanded .history-folder-arrow { transform: rotate(180deg); }
+    .history-folder-content { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease-snap); margin-top: 8px; padding-left: 12px; border-left: 2px solid var(--border); }
+    .history-folder.expanded .history-folder-content { max-height: 3000px; }
+    
+    .history-item { 
+      background: var(--surface); 
+      border-radius: var(--radius-md); 
+      border: 1px solid var(--border); 
+      box-shadow: var(--shadow-sm);       overflow: hidden; 
+      transition: box-shadow 0.2s; 
+      margin-bottom: var(--space-md);
+    }
+    .history-item.expanded { box-shadow: var(--shadow-md); border-color: var(--border-light); }
+    .history-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 14px 14px; 
+      cursor: pointer;
+    }
+    .history-header::after { content: '▼'; font-size: 14px; color: var(--text-muted); margin-left: 12px; transition: transform 0.3s var(--ease-snap); }
+    .history-item.expanded .history-header::after { content: '▲'; }
+    .history-meta-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .history-meta { font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; }
+    .history-tonnage { font-family: var(--font-mono); color: var(--text-secondary); font-weight: 600; font-size: 13px; }
+    .history-title { text-transform: uppercase; letter-spacing: 1px; color: var(--text-primary); font-size: 14px; font-weight: 700; }
+    
+    .history-content { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease-snap); opacity: 0; padding: 0 14px; }
+    .history-item.expanded .history-content { max-height: 3000px; opacity: 1; padding-bottom: 8px; }
+    .history-exercise-list { display: flex; flex-direction: column; gap: 14px; }
+    .history-exercise-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .history-exercise-name { font-family: var(--font-mono); font-size: 13px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 0.8px; }
+    .history-exercise-sets { display: flex; flex-direction: column; gap: 4px; }
+    .history-set-row { display: flex; align-items: center; font-family: var(--font-mono); font-size: 13px; color: var(--text-primary); padding: 4px 0; }
+    .history-set-num { color: var(--text-muted); font-size: 11px; min-width: 32px; }
+    .history-set-data { flex: 1; }
+    .history-divider { height: 1px; background: var(--border); margin: 10px 0; }
+    .history-actions { display: flex; gap: 8px; padding: 8px 14px 14px; }
+    .history-actions button { 
+      flex: 1; 
+      padding: 10px 6px; 
+      background: var(--surface-elevated); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      font-family: var(--font-mono); 
+      font-size: 11px; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+      cursor: pointer; 
+      color: var(--text-secondary); 
+      font-weight: 700; 
+      transition: all 0.15s; 
+    }
+    .history-actions button:active { background: var(--surface); color: var(--text-primary); }
+    .history-actions button.del:active { color: var(--danger) !important; border-color: var(--danger); background: rgba(255, 77, 77, 0.1); }
+    
+    /* ===== МОДАЛКИ ===== */
+    .confirm-modal-overlay, .modal-overlay {       position: fixed; 
+      inset: 0; 
+      background: rgba(0, 0, 0, 0.8); 
+      backdrop-filter: blur(4px); 
+      z-index: 1000; 
+      display: none; 
+      align-items: center; 
+      justify-content: center; 
+      padding: var(--space-lg); 
+    }
+    .confirm-modal-overlay.active, .modal-overlay.active { display: flex; animation: fadeIn 0.2s var(--ease-snap); }
+    .confirm-modal, .modal { 
+      background: var(--surface-elevated); 
+      border-radius: var(--radius-lg); 
+      padding: 24px 20px; 
+      width: 100%; 
+      max-width: 380px; 
+      border: 1px solid var(--border-light); 
+      box-shadow: var(--shadow-md); 
+      max-height: 85vh; 
+      overflow-y: auto; 
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal { animation: slideUp 0.25s var(--ease-snap); }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-title, .confirm-modal-title { 
+      font-size: 16px; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      margin-bottom: 20px; 
+      color: var(--text-primary); 
+    }
+    .confirm-modal-message { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.4; }
+    .confirm-modal-actions, .modal-actions { display: flex; gap: 12px; margin-top: 8px; }
+    .modal-inputs { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+    
+    .error-message {
+      color: var(--danger);
+      font-size: 11px;
+      margin-top: 4px;
+      padding-left: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .input.error { border-color: var(--danger) !important; }
+    
+    .ex-select-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .ex-select-btn { 
+      padding: 12px 8px;       background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      color: var(--text-secondary); 
+      font-family: var(--font-mono); 
+      font-size: 13px; 
+      text-transform: uppercase; 
+      cursor: pointer; 
+      transition: all 0.15s; 
+      font-weight: 600; 
+    }
+    .ex-select-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .set-select-btn { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 12px 14px; 
+      background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      color: var(--text-primary); 
+      font-family: var(--font-mono); 
+      font-size: 14px; 
+      margin-bottom: 8px; 
+      cursor: pointer; 
+      transition: all 0.15s; 
+    }
+    .set-select-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .set-select-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .set-select-btn .set-num { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+    .set-select-btn.active .set-num { color: rgba(0, 0, 0, 0.6); }
+    .set-select-btn .set-val { font-weight: 700; white-space: nowrap; }
+    .set-select-btn .del-set-edit { background: none; border: none; color: var(--text-muted); font-size: 22px; padding: 0 4px; cursor: pointer; transition: color 0.2s; line-height: 1; flex-shrink: 0; }
+    .set-select-btn.active .del-set-edit { color: rgba(0, 0, 0, 0.5); }
+    .set-select-btn .del-set-edit:active { color: var(--danger); }
+    
+    /* ===== ПРОГРЕСС / СТАТИСТИКА ===== */
+    .period-tabs { display: flex; gap: 6px; margin-bottom: 16px; background: var(--border); padding: 4px; border-radius: 50px; }
+    .tab { 
+      flex: 1; 
+      padding: 12px 6px; 
+      background: transparent; 
+      border: none; 
+      border-radius: 50px; 
+      color: var(--text-secondary); 
+      font-family: var(--font-mono); 
+      font-size: 12px; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      font-weight: 700;       cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    .tab.active { background: var(--accent); color: #000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .nav-arrows { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .nav-btn-arrow { background: none; border: none; color: var(--text-muted); font-size: 26px; cursor: pointer; padding: 8px 16px; border-radius: 40px; }
+    .nav-btn-arrow:active { color: var(--accent); background: var(--surface); }
+    .period-label { font-size: 14px; color: var(--text-primary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+    
+    .chart-container { background: var(--surface); padding: 12px 6px 4px; height: 120px; position: relative; cursor: pointer; border-radius: var(--radius-md); margin-top: 8px; }
+    .chart { display: flex; align-items: flex-end; gap: 4px; height: 100%; width: 100%; }
+    .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+    .chart-bar { width: 100%; background: var(--accent); border-radius: 4px 4px 0 0; transition: height 0.4s var(--ease-snap), background 0.2s; min-height: 4px; }
+    .chart-bar.muted { background: var(--text-muted); opacity: 0.3; }
+    .chart-bar.active { background: #FFFFFF; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+    .chart-labels { display: flex; gap: 4px; margin-top: 10px; }
+    .chart-label { flex: 1; text-align: center; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; font-weight: 600; }
+    .chart-tooltip { 
+      position: absolute; 
+      top: -36px; 
+      left: 12px; 
+      background: var(--surface-elevated); 
+      border: 1px solid var(--border-light); 
+      padding: 8px 14px; 
+      border-radius: 40px; 
+      font-family: var(--font-mono); 
+      font-size: 12px; 
+      color: var(--accent); 
+      opacity: 0; 
+      pointer-events: none; 
+      transition: opacity 0.2s; 
+      white-space: nowrap; 
+      box-shadow: var(--shadow-sm); 
+      font-weight: 600;
+    }
+    .chart-tooltip.visible { opacity: 1; }
+    
+    .exercise-embed { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 18px; }
+    .exercise-embed-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+    .exercise-embed-title { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); font-weight: 700; }
+    .exercise-embed-range { display: none; }
+    .exercise-embed-list { display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
+    .exercise-embed-item { display: flex; flex-direction: column; gap: 4px; }
+    .exercise-embed-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .exercise-embed-name { font-family: var(--font-mono); font-size: 13px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 0.8px; }
+    .exercise-embed-value { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .exercise-embed-bar { height: 6px; background: rgba(0, 230, 118, 0.2); border-radius: 6px; overflow: hidden; }
+    .exercise-embed-fill { height: 100%; background: var(--accent); border-radius: 6px; width: 0%; transition: width 0.3s var(--ease-snap); }
+    
+    .empty {       text-align: center; 
+      padding: 40px 16px; 
+      color: var(--text-muted); 
+      font-size: 12px; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      border: 1px dashed var(--border); 
+      border-radius: var(--radius-md); 
+      margin: 16px 0; 
+    }
+    
+    .hidden { display: none !important; }
+    
+    /* ===== НАВИГАЦИЯ ===== */
+    .nav { 
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      background: var(--surface); 
+      border-top: 1px solid var(--border); 
+      padding: 0 0 calc(env(safe-area-inset-bottom, 0px)) 0; 
+      z-index: 200; 
+      backdrop-filter: blur(10px); 
+      background: rgba(20, 20, 20, 0.9); 
+    }
+    .nav-btn { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 4px; 
+      background: none; 
+      border: none; 
+      color: var(--text-muted); 
+      font-family: var(--font-mono); 
+      font-size: 10px; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      cursor: pointer; 
+      transition: color 0.2s; 
+      padding: 10px 4px; 
+      min-height: 64px; 
+      position: relative; 
+      font-weight: 600;
+    }
+    .nav-btn:active { background: var(--surface-elevated); }
+    .nav-btn.active { color: var(--accent); }    .nav-btn.active::before { content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 4px; background: var(--accent); border-radius: 0 0 4px 4px; }
+    .nav-icon { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2.2; fill: none; }
+    
+    .toast { 
+      position: fixed; 
+      bottom: 85px; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      background: var(--surface-elevated); 
+      border: 1px solid var(--border-light); 
+      color: var(--text-primary); 
+      padding: 10px 20px; 
+      border-radius: 50px; 
+      font-size: 13px; 
+      font-weight: 600; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      z-index: 1500; 
+      opacity: 0; 
+      transition: opacity 0.3s; 
+      pointer-events: none; 
+      box-shadow: var(--shadow-md); 
+      white-space: nowrap; 
+    }
+    .toast.visible { opacity: 1; }
+    #file-import { display: none; }
+    
+    /* ===== ШАБЛОНЫ ===== */
+    .tmpl-card { background: var(--surface); border-radius: var(--radius-md); padding: 14px; border: 1px solid var(--border); margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+    .tmpl-card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .tmpl-name { font-family: var(--font-mono); font-size: 14px; color: var(--accent); text-transform: uppercase; font-weight: 700; letter-spacing: 0.8px; word-break: break-word; flex: 1; margin-right: 10px; }
+    .tmpl-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; white-space: nowrap; }
+    .tmpl-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .tmpl-actions button { flex: 1; padding: 8px 4px; background: var(--surface-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; font-weight: 600; }
+    .tmpl-actions button:active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .tmpl-actions button.danger:active { background: var(--danger); color: #000; border-color: var(--danger); }
+    
+    .tmpl-editor-ex { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 12px; }
+    .tmpl-ex-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .tmpl-ex-name { font-family: var(--font-mono); font-size: 13px; color: var(--accent); text-transform: uppercase; font-weight: 700; }
+    .tmpl-del-ex { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; padding: 0 4px; }
+    .tmpl-del-ex:active { color: var(--danger); }
+    .tmpl-set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .tmpl-set-row .input { flex: 1; }
+    .tmpl-set-row .input input { padding: 10px 8px; font-size: 13px; }
+    .tmpl-del-set { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; padding: 4px; }
+    .tmpl-del-set:active { color: var(--danger); }
+    .tmpl-add-set-btn { background: none; border: 1px dashed var(--border-light); color: var(--text-muted); font-size: 11px; padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer; margin-top: 8px; text-transform: uppercase; font-family: var(--font-mono); width: 100%; font-weight: 600; }
+    .tmpl-add-set-btn:active { border-color: var(--accent); color: var(--accent); background: rgba(0,230,118,0.05); }
+    .tmpl-add-ex-row { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }    .tmpl-add-ex-row .input { flex: 1; }
+    
+    @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header"><h1>WORKOUT <span>UP</span></h1></header>
+    <main>
+      <!-- ТРЕНИРОВКА -->
+      <section id="view-workout" class="view active">
+        <div class="workout-date" id="workout-date"></div>
+        <div class="workout-name-wrap">
+          <input type="text" class="workout-name-input" id="workout-name" placeholder="НАЗВАНИЕ ТРЕНИРОВКИ" autocomplete="off">
+          <button class="template-btn" id="btn-open-templates" type="button" title="ШАБЛОНЫ">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </button>
+        </div>
+        <button class="btn btn-add-set" id="btn-show-add-modal" type="button" disabled>
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+          ДОБАВИТЬ УПРАЖНЕНИЕ
+        </button>
+        <div id="sets-list" class="sets-grid"></div>
+        <button class="btn btn-primary" id="btn-save" style="margin-top:8px" disabled type="button">ЗАВЕРШИТЬ ТРЕНИРОВКУ</button>
+      </section>
+
+      <!-- ИСТОРИЯ -->
+      <section id="view-history" class="view">
+        <div class="history-header-row">
+          <span class="history-title-section">ИСТОРИЯ ТРЕНИРОВОК</span>
+          <button class="history-menu-btn" id="history-menu-btn" type="button" aria-label="Меню действий">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1" fill="currentColor"></circle>
+              <circle cx="12" cy="5" r="1" fill="currentColor"></circle>
+              <circle cx="12" cy="19" r="1" fill="currentColor"></circle>
+            </svg>
+          </button>
+          <div class="history-menu-dropdown" id="history-menu-dropdown">
+            <button class="history-menu-item" id="menu-export">
+              <svg viewBox="0 0 24 24"><path d="M12 16V4M12 4l-4 4M12 4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+              Экспорт
+            </button>
+            <button class="history-menu-item" id="menu-import">
+              <svg viewBox="0 0 24 24"><path d="M12 4v12M12 16l-4-4M12 16l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+              Импорт
+            </button>
+            <button class="history-menu-item danger" id="menu-clear-all">
+              Очистить историю
+            </button>
+          </div>        </div>
+        <div class="history-nav">
+          <button class="history-nav-btn" id="history-prev" type="button">◀</button>
+          <span class="history-period-label" id="history-period-label"></span>
+          <button class="history-nav-btn" id="history-next" type="button">▶</button>
+        </div>
+        <div id="history-list"></div>
+        <input type="file" id="file-import" accept=".json,application/json">
+      </section>
+
+      <!-- СТАТИСТИКА -->
+      <section id="view-progress" class="view">
+        <div class="panel" id="progress-panel">
+          <div class="panel-header">
+            <span class="panel-title">ОБЩИЙ ТОННАЖ</span>
+            <span class="panel-total" id="p-total"></span>
+          </div>
+          <div class="period-tabs" id="main-period-tabs">
+            <button class="tab active" data-period="week" type="button">НЕДЕЛЯ</button>
+            <button class="tab" data-period="month" type="button">МЕСЯЦ</button>
+            <button class="tab" data-period="year" type="button">ГОД</button>
+          </div>
+          <div class="nav-arrows">
+            <button class="nav-btn-arrow" id="prev-period" type="button">◀</button>
+            <span class="period-label" id="period-label"></span>
+            <button class="nav-btn-arrow" id="next-period" type="button">▶</button>
+          </div>
+          <div class="chart-container" id="chart-container">
+            <div class="chart-tooltip" id="chart-tooltip"></div>
+            <div class="chart" id="chart"></div>
+          </div>
+          <div class="chart-labels" id="chart-labels"></div>
+          <div class="exercise-embed" id="exercise-embed" style="display: none;">
+            <div class="exercise-embed-header">
+              <span class="exercise-embed-title">ТОННАЖ ПО УПРАЖНЕНИЯМ</span>
+              <span class="exercise-embed-range" id="exercise-range-label"></span>
+            </div>
+            <div class="exercise-embed-list" id="exercise-embed-list"></div>
+          </div>
+        </div>
+        <div id="p-empty" class="empty" style="display:none">НЕТ ДАННЫХ ДЛЯ РАСЧЁТА</div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">ТРЕНИРОВКА СОХРАНЕНА</div>
+
+  <!-- КАСТОМНОЕ МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ -->
+  <div class="confirm-modal-overlay" id="confirm-modal">
+    <div class="confirm-modal">      <div class="confirm-modal-title" id="confirm-modal-title">ПОДТВЕРЖДЕНИЕ</div>
+      <div class="confirm-modal-message" id="confirm-modal-message">Вы уверены?</div>
+      <div class="confirm-modal-actions">
+        <button class="btn" id="confirm-modal-cancel">ОТМЕНА</button>
+        <button class="btn btn-primary" id="confirm-modal-ok">ОК</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА ДОБАВЛЕНИЯ УПРАЖНЕНИЯ -->
+  <div class="modal-overlay" id="add-set-modal">
+    <div class="modal">
+      <div class="modal-title">ДОБАВИТЬ УПРАЖНЕНИЕ</div>
+      <div class="modal-inputs">
+        <div class="input" style="position: relative;" id="modal-ex-wrapper">
+          <input type="text" id="modal-inp-ex" placeholder="УПРАЖНЕНИЕ" autocomplete="off" inputmode="text">
+          <div class="autocomplete-list" id="autocomplete-list"></div>
+        </div>
+        <div class="input-row">
+          <div class="input" id="modal-w-wrapper"><input type="number" id="modal-inp-w" placeholder="ВЕС" step="0.5" min="0" inputmode="decimal"></div>
+          <div class="input" id="modal-r-wrapper"><input type="number" id="modal-inp-r" placeholder="ПОВТОРЫ" step="1" min="0" inputmode="numeric"></div>
+        </div>
+        <div class="input"><input type="number" id="modal-sets-count" placeholder="КОЛ-ВО ПОДХОДОВ (1-10)" value="3" min="1" max="10" step="1" inputmode="numeric"></div>
+        <div id="modal-error" class="error-message" style="display:none;"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="btn-add-cancel" type="button">ОТМЕНА</button>
+        <button class="btn btn-primary" id="btn-add-confirm" type="button">ДОБАВИТЬ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА РЕДАКТИРОВАНИЯ ТРЕНИРОВКИ -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal">
+      <div class="modal-title">РЕДАКТИРОВАНИЕ</div>
+      <div class="input" style="margin-bottom:16px">
+        <input type="text" id="edit-workout-name" placeholder="НАЗВАНИЕ ТРЕНИРОВКИ" autocomplete="off">
+      </div>
+      <div id="ex-select-container" class="ex-select-list"></div>
+      <div id="ex-set-selector" class="ex-set-selector" style="display:none;"></div>
+      <div class="modal-inputs" id="modal-inputs" style="display:none;">
+        <div class="input-row">
+          <div class="input"><input type="number" id="edit-w" placeholder="ВЕС" step="0.5" min="0" inputmode="decimal"></div>
+          <div class="input"><input type="number" id="edit-r" placeholder="ПОВТОРЫ" step="1" min="0" inputmode="numeric"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="btn-edit-cancel" type="button">ОТМЕНА</button>
+        <button class="btn btn-primary" id="btn-edit-save" type="button">СОХРАНИТЬ</button>      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATES MODAL -->
+  <div class="modal-overlay" id="templates-modal">
+    <div class="modal">
+      <div class="modal-title">📋 ШАБЛОНЫ ТРЕНИРОВОК</div>
+      <div class="input" style="margin-bottom:16px"><input type="text" id="tmpl-search" placeholder="ПОИСК ШАБЛОНОВ..." autocomplete="off"></div>
+      <div id="templates-list" style="max-height: 280px; overflow-y: auto; margin-bottom: 20px;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-create-tmpl-new" type="button">➕ СОЗДАТЬ С НУЛЯ</button>
+      </div>
+      <button class="btn" id="btn-close-templates" type="button" style="margin-top:12px">ЗАКРЫТЬ</button>
+    </div>
+  </div>
+
+  <!-- TEMPLATE EDITOR MODAL -->
+  <div class="modal-overlay" id="template-editor-modal">
+    <div class="modal">
+      <div class="modal-title">РЕДАКТОР ШАБЛОНА</div>
+      <div class="input" style="margin-bottom:16px"><input type="text" id="tmpl-editor-name" placeholder="НАЗВАНИЕ ШАБЛОНА" autocomplete="off"></div>
+      <div class="tmpl-add-ex-row">
+        <div class="input" style="position: relative;">
+          <input type="text" id="tmpl-new-ex-name" placeholder="УПРАЖНЕНИЕ" autocomplete="off" inputmode="text">
+          <div class="autocomplete-list" id="tmpl-autocomplete-list"></div>
+        </div>
+        <button class="btn" id="btn-tmpl-add-ex" type="button" style="width:auto; padding: 0 16px; min-height: 46px;">+</button>
+      </div>
+      <div id="tmpl-editor-exercises" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; max-height: 240px; overflow-y: auto;"></div>
+      <div class="modal-actions">
+        <button class="btn" id="btn-tmpl-editor-cancel" type="button">ОТМЕНА</button>
+        <button class="btn btn-primary" id="btn-tmpl-editor-save" type="button">СОХРАНИТЬ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- НАВИГАЦИЯ -->
+  <nav class="nav" role="navigation">
+    <button class="nav-btn active" data-target="workout" type="button">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      <span>ТРЕНИРОВКА</span>
+    </button>
+    <button class="nav-btn" data-target="history" type="button">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      <span>ИСТОРИЯ</span>
+    </button>
+    <button class="nav-btn" data-target="progress" type="button">
+      <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-6 4 4 5-8" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>СТАТИСТИКА</span>    </button>
+  </nav>
+
+  <script>
+    (function() {
+      'use strict';
+      // ===== STATE =====
+      var state = {
+        sets: [], workouts: [], templates: [],
+        period: 'week', viewDate: new Date(), historyViewDate: new Date(),
+        editingWorkoutId: null, selectedExercise: null, selectedSetId: null,
+        exerciseFilter: null, lastSelectedIndex: -1,
+        editorTemplate: null,
+        editingExercise: null
+      };
+
+      var els = {};
+      var kettlebellSVG = '<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 5 C30 5 18 18 18 30 C18 42 24 50 30 56 C18 68 8 82 8 98 C8 112 22 118 50 118 C78 118 92 112 92 98 C92 82 82 68 70 56 C76 50 82 42 82 30 C82 18 70 5 50 5 Z M50 15 C62 15 70 22 70 30 C70 38 62 45 50 45 C38 45 30 38 30 30 C30 22 38 15 50 15 Z"/></svg>';
+
+      var confirmCallback = null;
+      var confirmModal = { overlay: null, title: null, message: null, btnOk: null, btnCancel: null };
+
+      function showConfirm(title, message, onConfirm) {
+        confirmModal.title.textContent = title;
+        confirmModal.message.textContent = message;
+        confirmCallback = onConfirm;
+        confirmModal.overlay.classList.add('active');
+      }
+      function hideConfirm() { confirmModal.overlay.classList.remove('active'); confirmCallback = null; }
+
+      // ===== UTILS =====
+      function formatTonnage(kg) {
+        if (!kg || kg < 0) return '0 кг';
+        if (kg >= 1000) { var tons = kg / 1000; return (Number.isInteger(tons) ? tons : tons.toFixed(1).replace('.', ',')) + ' т'; }
+        return Math.round(kg) + ' кг';
+      }
+      function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+      function getWeekStart(date) { var d = new Date(date); var day = d.getDay(); var diff = (day === 0 ? -6 : 1) - day; d.setDate(d.getDate() + diff); d.setHours(0, 0, 0, 0); return d; }
+      function formatDateRange(start, end) { var fmt = function(dt) { return dt.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit'}); }; return fmt(start) + ' – ' + fmt(end); }
+      function getMonthKey(date) { var d = new Date(date); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+      function getWeekKey(date) { var start = getWeekStart(date); return start.getFullYear() + '-W' + String(getWeekNumber(start)).padStart(2, '0'); }
+      function getWeekNumber(date) { var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())); var dayNum = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - dayNum); var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1)); return Math.ceil((((d - yearStart) / 86400000) + 1)/7); }
+      function formatMonthLabel(date) { return date.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }).toUpperCase(); }
+
+      // ===== DOM =====
+      function $(id) { return document.getElementById(id); }
+      function cacheElements() {
+        els = {
+          workoutDate: $('workout-date'), workoutNameInput: $('workout-name'), btnOpenTemplates: $('btn-open-templates'),
+          btnShowAddModal: $('btn-show-add-modal'), addSetModal: $('add-set-modal'), modalInpEx: $('modal-inp-ex'), autocompleteList: $('autocomplete-list'),          modalInpW: $('modal-inp-w'), modalInpR: $('modal-inp-r'), modalSetsCount: $('modal-sets-count'),
+          btnAddCancel: $('btn-add-cancel'), btnAddConfirm: $('btn-add-confirm'),
+          btnSave: $('btn-save'), setsList: $('sets-list'), historyList: $('history-list'), historyPeriodLabel: $('history-period-label'),
+          historyPrev: $('history-prev'), historyNext: $('history-next'),
+          menuBtn: $('history-menu-btn'), menuDropdown: $('history-menu-dropdown'),
+          menuExport: $('menu-export'), menuImport: $('menu-import'), menuClearAll: $('menu-clear-all'),
+          fileImport: $('file-import'), chart: $('chart'), chartLabels: $('chart-labels'),
+          chartContainer: $('chart-container'), chartTooltip: $('chart-tooltip'), pTotal: $('p-total'), pPeriodLabel: $('period-label'),
+          pEmpty: $('p-empty'), prevBtn: $('prev-period'), nextBtn: $('next-period'), editModal: $('edit-modal'), exSelectContainer: $('ex-select-container'),
+          exSetSelector: $('ex-set-selector'), modalInputs: $('modal-inputs'), editW: $('edit-w'), editR: $('edit-r'), editWorkoutName: $('edit-workout-name'),
+          btnEditSave: $('btn-edit-save'), btnEditCancel: $('btn-edit-cancel'), toast: $('toast'), mainTabs: document.querySelectorAll('#main-period-tabs .tab'),
+          exerciseEmbed: $('exercise-embed'), exerciseEmbedList: $('exercise-embed-list'), exerciseRangeLabel: $('exercise-range-label'),
+          navBtns: document.querySelectorAll('.nav-btn'), views: document.querySelectorAll('.view'),
+          templatesModal: $('templates-modal'), tmplSearch: $('tmpl-search'), templatesList: $('templates-list'),
+          btnCreateTmplNew: $('btn-create-tmpl-new'), btnCloseTemplates: $('btn-close-templates'),
+          templateEditorModal: $('template-editor-modal'), tmplEditorName: $('tmpl-editor-name'), tmplNewExName: $('tmpl-new-ex-name'),
+          tmplAutocompleteList: $('tmpl-autocomplete-list'),
+          btnTmplAddEx: $('btn-tmpl-add-ex'), tmplEditorExercises: $('tmpl-editor-exercises'),
+          btnTmplEditorCancel: $('btn-tmpl-editor-cancel'), btnTmplEditorSave: $('btn-tmpl-editor-save'),
+          progressPanel: $('progress-panel'),
+          modalExWrapper: $('modal-ex-wrapper'), modalWWrapper: $('modal-w-wrapper'), modalRWrapper: $('modal-r-wrapper'),
+          modalError: $('modal-error')
+        };
+        confirmModal.overlay = $('confirm-modal');
+        confirmModal.title = $('confirm-modal-title');
+        confirmModal.message = $('confirm-modal-message');
+        confirmModal.btnOk = $('confirm-modal-ok');
+        confirmModal.btnCancel = $('confirm-modal-cancel');
+      }
+
+      // ===== STORAGE =====
+      function loadData() {
+        try {
+          var raw = localStorage.getItem('wd_v2');
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) { state.workouts = parsed; state.templates = []; }
+            else { state.workouts = parsed.workouts || []; state.templates = parsed.templates || []; }
+            state.workouts.forEach(function(w) { w.sets.forEach(function(s) { if (!s.id) s.id = generateId(); }); });
+          }
+        } catch (e) { console.warn('Load error:', e); state.workouts = []; state.templates = []; }
+      }
+      function saveData() { try { localStorage.setItem('wd_v2', JSON.stringify({ workouts: state.workouts, templates: state.templates })); } catch (e) { showToast('⚠️ Не удалось сохранить'); } }
+
+      function showToast(text, duration) { if (duration === void 0) duration = 2000; els.toast.textContent = text; els.toast.classList.add('visible'); clearTimeout(els.toast._timeout); els.toast._timeout = setTimeout(function() { els.toast.classList.remove('visible'); }, duration); }
+      function updateDate() { try { var now = new Date(); var opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }; els.workoutDate.textContent = now.toLocaleDateString('ru-RU', opts).toUpperCase(); } catch (e) { els.workoutDate.textContent = new Date().toDateString().toUpperCase(); } }
+      function switchView(target) {
+        els.views.forEach(function(v) { v.classList.remove('active'); });
+        els.navBtns.forEach(function(b) { b.classList.remove('active'); });
+        var view = document.getElementById('view-' + target);        if (view) view.classList.add('active');
+        els.navBtns.forEach(function(b) { if (b.getAttribute('data-target') === target) b.classList.add('active'); });
+        if (target === 'progress') { state.viewDate = new Date(); state.period = 'week'; state.exerciseFilter = null; state.lastSelectedIndex = -1; els.mainTabs.forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-period') === state.period); }); renderProgress(); updateExercisePanel(); }
+        if (target === 'history') { state.historyViewDate = new Date(); renderHistory(); }
+        if (target === 'workout') { updateAddButtonState(); }
+        closeMenu();
+      }
+
+      // ===== WORKOUT =====
+      function updateAddButtonState() { var hasName = els.workoutNameInput.value.trim().length >= 2; els.btnShowAddModal.disabled = !hasName; els.btnSave.disabled = state.sets.length === 0; }
+      function getUniqueExercises() { var exSet = new Set(); state.workouts.forEach(function(w) { w.sets.forEach(function(s) { if (s.ex && s.ex.trim()) exSet.add(s.ex.trim().toUpperCase()); }); }); state.templates.forEach(function(t) { if (t.exercises) t.exercises.forEach(function(e) { if (e.ex && e.ex.trim()) exSet.add(e.ex.trim().toUpperCase()); }); }); return Array.from(exSet).sort(); }
+      function filterAutocomplete(query) { if (!query || query.length < 2) return []; var all = getUniqueExercises(); var q = query.toUpperCase(); return all.filter(function(ex) { return ex.indexOf(q) !== -1; }).sort(function(a, b) { var aS = a.indexOf(q) === 0 ? 0 : 1; var bS = b.indexOf(q) === 0 ? 0 : 1; return aS - bS || a.length - b.length; }).slice(0, 8); }
+      function renderAutocomplete(inputEl, listEl) { var query = inputEl.value.trim(); var items = filterAutocomplete(query); if (items.length === 0) { listEl.style.display = 'none'; return; } var html = items.map(function(item) { return '<div class="autocomplete-item" role="option">' + item + '</div>'; }).join(''); listEl.innerHTML = html; listEl.style.display = 'block'; listEl.querySelectorAll('.autocomplete-item').forEach(function(el) { el.onclick = function() { inputEl.value = this.textContent; listEl.style.display = 'none'; }; }); }
+      function hideAutocomplete(listEl) { setTimeout(function() { listEl.style.display = 'none'; }, 100); }
+      
+      function openAddSetModal() { 
+        if (els.btnShowAddModal.disabled) { 
+          showToast('Введите название тренировки'); 
+          return; 
+        } 
+        els.modalInpEx.value = ''; els.modalInpW.value = ''; els.modalInpR.value = ''; els.modalSetsCount.value = '3'; 
+        els.autocompleteList.style.display = 'none'; 
+        clearModalErrors();
+        els.addSetModal.classList.add('active'); 
+        setTimeout(function() { els.modalInpEx.focus(); }, 100); 
+      }
+      
+      function clearModalErrors() {
+        els.modalExWrapper.classList.remove('error');
+        els.modalWWrapper.classList.remove('error');
+        els.modalRWrapper.classList.remove('error');
+        els.modalError.style.display = 'none';
+        els.modalError.textContent = '';
+      }
+      
+      function closeAddSetModal() { els.addSetModal.classList.remove('active'); els.autocompleteList.style.display = 'none'; clearModalErrors(); }
+      
+      function validateSetData(ex, w, r) { 
+        var errors = []; 
+        if (!ex || ex.length < 2) errors.push('Укажите упражнение (минимум 2 символа)'); 
+        if (isNaN(w) || w <= 0 || w > 500) errors.push('Вес должен быть от 0.5 до 500 кг'); 
+        if (isNaN(r) || r <= 0 || r > 100) errors.push('Повторы должны быть от 1 до 100'); 
+        return errors; 
+      }
+      
+      function addSetFromModal() { 
+        var ex = els.modalInpEx.value.trim().toUpperCase(); 
+        var w = parseFloat(els.modalInpW.value); 
+        var r = parseInt(els.modalInpR.value); 
+        var count = parseInt(els.modalSetsCount.value) || 1;         count = Math.min(10, Math.max(1, count)); 
+        
+        clearModalErrors();
+        
+        var errors = [];
+        if (!ex || ex.length < 2) { els.modalExWrapper.classList.add('error'); errors.push('Укажите упражнение'); }
+        if (isNaN(w) || w <= 0 || w > 500) { els.modalWWrapper.classList.add('error'); errors.push('Некорректный вес'); }
+        if (isNaN(r) || r <= 0 || r > 100) { els.modalRWrapper.classList.add('error'); errors.push('Некорректные повторы'); }
+        
+        if (errors.length > 0) {
+          els.modalError.textContent = errors.join(' · ');
+          els.modalError.style.display = 'block';
+          return;
+        }
+        
+        for (var i = 0; i < count; i++) { state.sets.push({ id: generateId(), ex: ex, w: w, r: r }); } 
+        renderSets(); closeAddSetModal(); showToast('✓ Упражнение добавлено', 1200); 
+      }
+      
+      function removeSet(id) { var idx = state.sets.findIndex(function(s) { return s.id === id; }); if (idx !== -1) { state.sets.splice(idx, 1); renderSets(); showToast('Подход удалён', 1000); } }
+      function renderSets() {
+        els.btnSave.disabled = (state.sets.length === 0);
+        if (state.sets.length === 0) { els.setsList.innerHTML = '<div class="empty" style="margin:0;border:none;padding:30px">ПОДХОДОВ НЕТ</div>'; return; }
+        var groups = {}; var order = [];
+        state.sets.forEach(function(s) { if (!groups[s.ex]) { groups[s.ex] = []; order.push(s.ex); } groups[s.ex].push(s); });
+        var html = order.map(function(ex) {
+          var sets = groups[ex]; var exTonnage = sets.reduce(function(sum, s) { return sum + s.w * s.r; }, 0); var isEditing = (state.editingExercise === ex);
+          var headerHtml = '<div class="ex-header">' +
+            (isEditing ? '<input type="text" class="ex-name-input" id="edit-ex-name-' + ex.replace(/\s/g, '_') + '" value="' + ex + '">' : '<span class="ex-name">' + ex + '</span>') +
+            '<button class="ex-edit-btn' + (isEditing ? ' active' : '') + '" data-ex="' + ex + '">' + (isEditing ? 'СОХРАНИТЬ' : 'РЕД.') + '</button>' +
+            (isEditing ? '' : '<span class="ex-badge">' + kettlebellSVG + formatTonnage(exTonnage) + '</span>') +
+            '</div>';
+          var setsHtml = '';
+          if (isEditing) { setsHtml = sets.map(function(set, idx) { return '<div class="ex-set-edit-row"><span class="set-num">#' + (idx + 1) + '</span><div class="input"><input type="number" id="edit-w-' + set.id + '" value="' + set.w + '" step="0.5" min="0" inputmode="decimal" placeholder="ВЕС"></div><div class="input"><input type="number" id="edit-r-' + set.id + '" value="' + set.r + '" step="1" min="0" inputmode="numeric" placeholder="ПОВТ"></div><button class="del-set" data-id="' + set.id + '">×</button></div>'; }).join(''); setsHtml += '<button class="ex-add-set-btn" data-ex="' + ex + '">+ ПОДХОД</button>'; } 
+          else { setsHtml = '<div class="ex-sets">' + sets.map(function(set, idx) { return '<div class="ex-set"><span class="set-num">#' + (idx + 1) + '</span><span class="set-data">' + set.w + '<small>×</small>' + set.r + '</span></div>'; }).join('') + '</div>'; }
+          return '<div class="ex-col" data-ex="' + ex + '">' + headerHtml + setsHtml + '</div>';
+        }).join('');
+        els.setsList.innerHTML = html;
+      }
+      function saveExerciseEdit(ex) { var newNameInput = document.getElementById('edit-ex-name-' + ex.replace(/\s/g, '_')); var newName = newNameInput ? newNameInput.value.trim().toUpperCase() : ex; if (newName.length < 2) { showToast('Название упражнения слишком короткое'); return; } var sets = state.sets.filter(function(s) { return s.ex === ex; }); sets.forEach(function(set) { var wInput = document.getElementById('edit-w-' + set.id); var rInput = document.getElementById('edit-r-' + set.id); if (wInput && rInput) { var w = parseFloat(wInput.value); var r = parseInt(rInput.value); if (!isNaN(w) && w > 0 && !isNaN(r) && r > 0) { set.w = w; set.r = r; } } }); if (newName !== ex) { state.sets.forEach(function(s) { if (s.ex === ex) s.ex = newName; }); } state.editingExercise = null; renderSets(); showToast('✓ Изменения сохранены'); }
+      function addSetToExercise(ex) { var lastSet = state.sets.filter(function(s) { return s.ex === ex; }).slice(-1)[0]; var w = lastSet ? lastSet.w : 20; var r = lastSet ? lastSet.r : 10; state.sets.push({ id: generateId(), ex: ex, w: w, r: r }); renderSets(); }
+      function saveWorkout() { if (state.sets.length === 0) { showToast('Добавьте хотя бы один подход'); return; } var vol = 0, max = 0; state.sets.forEach(function(s) { vol += s.w * s.r; if (s.w > max) max = s.w; }); var name = els.workoutNameInput.value.trim().toUpperCase(); if (name.length < 2) name = 'ТРЕНИРОВКА'; state.workouts.push({ id: Date.now(), date: new Date().toISOString(), name: name, sets: JSON.parse(JSON.stringify(state.sets)), vol: vol, max: max }); saveData(); state.sets = []; els.workoutNameInput.value = ''; updateAddButtonState(); renderSets(); showToast('✓ ТРЕНИРОВКА СОХРАНЕНА'); }
+
+      // ===== TEMPLATES (без изменений) =====
+      function openTemplatesModal() { els.tmplSearch.value = ''; renderTemplatesList(); els.templatesModal.classList.add('active'); }
+      function closeTemplatesModal() { els.templatesModal.classList.remove('active'); }
+      function renderTemplatesList() { var q = els.tmplSearch.value.trim().toUpperCase(); var filtered = state.templates.filter(function(t) { return !q || t.name.indexOf(q) !== -1; }); if (filtered.length === 0) { els.templatesList.innerHTML = '<div class="empty" style="margin:0;padding:20px;font-size:11px;">ШАБЛОНЫ НЕ НАЙДЕНЫ</div>'; return; } els.templatesList.innerHTML = filtered.map(function(t) { var totalSets = t.exercises.reduce(function(s, e) { return s + (e.sets ? e.sets.length : 0); }, 0); return '<div class="tmpl-card"><div class="tmpl-card-header"><span class="tmpl-name">' + t.name + '</span><span class="tmpl-meta">' + t.exercises.length + ' упр. • ' + totalSets + ' под.</span></div><div class="tmpl-actions"><button class="use-tmpl" data-id="' + t.id + '" type="button">ИСПОЛЬЗОВАТЬ</button><button class="edit-tmpl" data-id="' + t.id + '" type="button">ИЗМ.</button><button class="del-tmpl danger" data-id="' + t.id + '" type="button">✕</button></div></div>'; }).join(''); }
+      function createTemplateFromWorkout(workout) { var groups = {}; workout.sets.forEach(function(s) { if (!groups[s.ex]) groups[s.ex] = []; groups[s.ex].push({w: s.w, r: s.r}); }); var exercises = Object.keys(groups).map(function(ex) { return { ex: ex, sets: groups[ex] }; }); var name = workout.name.toUpperCase(); if (state.templates.some(function(t) { return t.name === name; })) { name = name + ' (КОПИЯ)'; } state.templates.push({ id: generateId(), name: name, createdAt: new Date().toISOString(), exercises: exercises }); saveData(); showToast('💾 ШАБЛОН СОХРАНЁН'); }
+      function loadTemplate(id) { var tmpl = state.templates.find(function(t) { return t.id === id; }); if (!tmpl) return; els.workoutNameInput.value = tmpl.name; state.sets = []; tmpl.exercises.forEach(function(e) { e.sets.forEach(function(s) { state.sets.push({ id: generateId(), ex: e.ex, w: s.w, r: s.r }); }); }); renderSets(); updateAddButtonState(); closeTemplatesModal(); showToast('✓ ШАБЛОН ЗАГРУЖЕН', 1000); }
+      function deleteTemplate(id) { showConfirm('УДАЛИТЬ ШАБЛОН?', 'Это действие нельзя отменить.', function() { state.templates = state.templates.filter(function(t) { return t.id !== id; }); saveData(); renderTemplatesList(); showToast('ШАБЛОН УДАЛЁН'); }); }      function openTemplateEditor(templateId) { closeTemplatesModal(); if (templateId) { var tmpl = state.templates.find(function(t) { return t.id === templateId; }); state.editorTemplate = tmpl ? JSON.parse(JSON.stringify(tmpl)) : { id: generateId(), name: '', exercises: [] }; } else { state.editorTemplate = { id: generateId(), name: '', exercises: [] }; } els.tmplEditorName.value = state.editorTemplate.name || ''; renderTemplateEditor(); els.templateEditorModal.classList.add('active'); setTimeout(function() { els.tmplEditorName.focus(); }, 100); }
+      function closeTemplateEditor() { els.templateEditorModal.classList.remove('active'); state.editorTemplate = null; openTemplatesModal(); }
+      function renderTemplateEditor() { if (!state.editorTemplate) return; var html = state.editorTemplate.exercises.map(function(ex, i) { var setsHtml = (ex.sets || []).map(function(s, j) { return '<div class="tmpl-set-row"><div class="input"><input type="number" data-ex="' + i + '" data-set="' + j + '" data-field="w" value="' + s.w + '" step="0.5" min="0" inputmode="decimal" placeholder="ВЕС"></div><div class="input"><input type="number" data-ex="' + i + '" data-set="' + j + '" data-field="r" value="' + s.r + '" step="1" min="0" inputmode="numeric" placeholder="ПОВТ"></div><button class="tmpl-del-set" data-ex="' + i + '" data-set="' + j + '" type="button">×</button></div>'; }).join(''); return '<div class="tmpl-editor-ex"><div class="tmpl-ex-header"><span class="tmpl-ex-name">' + ex.ex + '</span><button class="tmpl-del-ex" data-ex="' + i + '" type="button">×</button></div>' + setsHtml + '<button class="tmpl-add-set-btn" data-ex="' + i + '" type="button">+ ПОДХОД</button></div>'; }).join(''); els.tmplEditorExercises.innerHTML = html; }
+      function tmplAddExercise() { var name = els.tmplNewExName.value.trim().toUpperCase(); if (name.length < 2) { showToast('Введите название упражнения'); return; } if (state.editorTemplate.exercises.some(function(e) { return e.ex === name; })) { showToast('Такое упражнение уже есть'); return; } state.editorTemplate.exercises.push({ ex: name, sets: [{ w: 20, r: 10 }] }); els.tmplNewExName.value = ''; els.tmplAutocompleteList.style.display = 'none'; renderTemplateEditor(); }
+      function tmplUpdateSet(exIdx, setIdx, field, value) { var v = field === 'w' ? parseFloat(value) : parseInt(value); if (!isNaN(v) && v > 0) state.editorTemplate.exercises[exIdx].sets[setIdx][field] = v; }
+      function tmplRemoveSet(exIdx, setIdx) { var ex = state.editorTemplate.exercises[exIdx]; if (ex.sets.length > 1) { ex.sets.splice(setIdx, 1); } else { state.editorTemplate.exercises.splice(exIdx, 1); } renderTemplateEditor(); }
+      function tmplRemoveExercise(idx) { state.editorTemplate.exercises.splice(idx, 1); renderTemplateEditor(); }
+      function saveTemplateFromEditor() { var name = els.tmplEditorName.value.trim().toUpperCase(); if (name.length < 2) { showToast('Введите название шаблона'); return; } state.editorTemplate.name = name; var existingIndex = state.templates.findIndex(function(t) { return t.id === state.editorTemplate.id; }); if (existingIndex !== -1) { state.templates[existingIndex] = state.editorTemplate; } else { if (state.templates.some(function(t) { return t.name === name; })) { state.editorTemplate.name = name + ' (КОПИЯ)'; } state.templates.push(state.editorTemplate); } saveData(); closeTemplateEditor(); showToast('✓ ШАБЛОН СОХРАНЁН'); }
+
+      // ===== HISTORY =====
+      function getExerciseData(sets) { var groups = {}; sets.forEach(function(s) { if (!groups[s.ex]) groups[s.ex] = { sets: [], tonnage: 0 }; groups[s.ex].sets.push({ w: s.w, r: s.r, id: s.id }); groups[s.ex].tonnage += s.w * s.r; }); return groups; }
+      
+      function updateHistoryControlsVisibility() {
+        var hasData = state.workouts.length > 0;
+        var historyNav = document.querySelector('.history-nav');
+        if (hasData) {
+          historyNav.classList.remove('hidden');
+        } else {
+          historyNav.classList.add('hidden');
+        }
+        updateMenuItemsState(hasData);
+      }
+      
+      function updateMenuItemsState(hasData) {
+        if (hasData) {
+          els.menuExport.classList.remove('disabled');
+          els.menuClearAll.classList.remove('disabled');
+        } else {
+          els.menuExport.classList.add('disabled');
+          els.menuClearAll.classList.add('disabled');
+        }
+      }
+      
+      function closeMenu() { els.menuDropdown.classList.remove('active'); }
+      function toggleMenu(e) { e.stopPropagation(); els.menuDropdown.classList.toggle('active'); }
+      
+      function renderHistory() {
+        if (state.workouts.length === 0) { 
+          els.historyList.innerHTML = '<div class="empty">ТРЕНИРОВОК НЕ ЗАФИКСИРОВАНО</div>'; 
+          els.historyPeriodLabel.textContent = ''; 
+          updateHistoryControlsVisibility();
+          return; 
+        }
+        updateHistoryControlsVisibility();
+        var currentMonth = state.historyViewDate; 
+        var monthKey = getMonthKey(currentMonth); 
+        els.historyPeriodLabel.textContent = formatMonthLabel(currentMonth);
+        var monthWorkouts = state.workouts.filter(function(w) { return getMonthKey(new Date(w.date)) === monthKey; }); 
+        if (monthWorkouts.length === 0) { els.historyList.innerHTML = '<div class="empty">В ЭТОМ МЕСЯЦЕ НЕТ ТРЕНИРОВОК</div>'; return; }
+        var weeks = {}; monthWorkouts.forEach(function(w) { var weekKey = getWeekKey(new Date(w.date)); if (!weeks[weekKey]) { weeks[weekKey] = { start: getWeekStart(new Date(w.date)), workouts: [] }; } weeks[weekKey].workouts.push(w); });        var weekKeys = Object.keys(weeks).sort();
+        var html = weekKeys.map(function(weekKey) { var week = weeks[weekKey]; var weekEnd = new Date(week.start); weekEnd.setDate(weekEnd.getDate() + 6); var weekLabel = formatDateRange(week.start, weekEnd); week.workouts.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+          var workoutsHtml = week.workouts.map(function(w) { var d = new Date(w.date); var dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }); var timeStr = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); var exData = getExerciseData(w.sets); var order = Object.keys(exData);
+            var exercisesHtml = order.map(function(ex, index) { var data = exData[ex]; var setsHtml = data.sets.map(function(set, idx) { return '<div class="history-set-row"><span class="history-set-num">#' + (idx + 1) + '</span><span class="history-set-data">' + set.w + ' × ' + set.r + '</span></div>'; }).join(''); var divider = index < order.length - 1 ? '<div class="history-divider"></div>' : ''; return '<div class="history-exercise"><div class="history-exercise-header"><span class="history-exercise-name">' + ex + '</span></div><div class="history-exercise-sets">' + setsHtml + '</div>' + divider + '</div>'; }).join('');
+            return '<div class="history-item" data-id="' + w.id + '"><div class="history-header" role="button" tabindex="0"><div style="flex:1"><div class="history-meta-row"><span class="history-meta">' + dateStr + ' · ' + timeStr + '</span><span class="history-tonnage">' + formatTonnage(w.vol) + '</span></div><div class="history-title">' + w.name + '</div></div></div><div class="history-content"><div class="history-exercise-list">' + exercisesHtml + '</div></div><div class="history-actions"><button class="btn-edit" data-id="' + w.id + '" type="button">ИЗМЕНИТЬ</button><button class="btn-to-template" data-id="' + w.id + '" type="button">В ШАБЛОН</button><button class="del btn-del" data-id="' + w.id + '" type="button">УДАЛИТЬ</button></div></div>'; }).join('');
+          return '<div class="history-folder" data-week="' + weekKey + '"><div class="history-folder-header"><span class="history-folder-title">' + weekLabel + '</span><div class="history-folder-meta"><span class="history-folder-count">' + week.workouts.length + '</span><span class="history-folder-arrow">▼</span></div></div><div class="history-folder-content">' + workoutsHtml + '</div></div>';
+        }).join('');
+        els.historyList.innerHTML = html;
+      }
+
+      function exportData() { 
+        if (state.workouts.length === 0 && state.templates.length === 0) { showToast('Нет данных для экспорта'); return; } 
+        var data = { workouts: state.workouts, templates: state.templates }; 
+        var dataStr = JSON.stringify(data, null, 2); 
+        var blob = new Blob([dataStr], { type: 'application/json' }); 
+        var fileName = 'workout_backup_' + new Date().toISOString().slice(0,10) + '.json'; 
+        if (navigator.share && navigator.canShare) { 
+          var file = new File([blob], fileName, { type: 'application/json' }); 
+          if (navigator.canShare({ files: [file] })) { 
+            navigator.share({ files: [file], title: 'Workout Up Backup', text: 'Резервная копия тренировок' }).then(function() { showToast('✓ Файл готов к сохранению'); }).catch(function(err) { if (err.name !== 'AbortError') fallbackDownload(); }); 
+            return; 
+          } 
+        } 
+        fallbackDownload(); 
+        function fallbackDownload() { 
+          var url = URL.createObjectURL(blob); 
+          var a = document.createElement('a'); 
+          a.href = url; 
+          a.download = fileName; 
+          document.body.appendChild(a); 
+          a.click(); 
+          document.body.removeChild(a); 
+          URL.revokeObjectURL(url); 
+          showToast('✓ Файл скачан'); 
+        } 
+      }
+      
+      function importData(file) { 
+        var reader = new FileReader(); 
+        reader.onload = function(e) { 
+          try { 
+            var imported = JSON.parse(e.target.result); 
+            if (!imported) throw new Error('Неверный формат'); 
+            state.workouts = Array.isArray(imported.workouts) ? imported.workouts : (Array.isArray(imported) ? imported : []); 
+            state.templates = Array.isArray(imported.templates) ? imported.templates : []; 
+            saveData(); 
+            renderHistory(); 
+            renderProgress(); 
+            showToast('✓ Данные импортированы'); 
+          } catch (err) {             showToast('❌ Ошибка: неверный файл'); 
+          } 
+          els.fileImport.value = ''; 
+        }; 
+        reader.readAsText(file); 
+      }
+      
+      function clearAllHistory() { 
+        if (state.workouts.length === 0) { showToast('История уже пуста'); return; } 
+        showConfirm('⚠️ ОЧИСТИТЬ ИСТОРИЮ', 'Все тренировки будут безвозвратно удалены. Продолжить?', function() { 
+          state.workouts = []; 
+          saveData(); 
+          renderHistory(); 
+          renderProgress(); 
+          showToast('История очищена'); 
+        }); 
+      }
+
+      // ===== EDIT =====
+      function openEdit(workoutId) { var workout = state.workouts.find(function(w) { return w.id === workoutId; }); if (!workout) return; state.editingWorkoutId = workoutId; state.selectedExercise = null; state.selectedSetId = null; els.modalInputs.style.display = 'none'; els.exSetSelector.style.display = 'none'; els.exSetSelector.innerHTML = ''; els.editW.value = ''; els.editR.value = ''; els.editWorkoutName.value = workout.name; var exData = {}; workout.sets.forEach(function(s) { if (!exData[s.ex]) exData[s.ex] = []; exData[s.ex].push(s); }); els.exSelectContainer.innerHTML = Object.keys(exData).map(function(ex) { return '<button class="ex-select-btn" type="button" data-ex="' + ex + '">' + ex + '</button>'; }).join(''); els.exSelectContainer.querySelectorAll('.ex-select-btn').forEach(function(btn) { btn.onclick = function() { var ex = this.getAttribute('data-ex'); els.exSelectContainer.querySelectorAll('.ex-select-btn').forEach(function(b) { b.classList.remove('active'); }); this.classList.add('active'); state.selectedExercise = ex; showSetSelector(exData[ex]); }; }); els.editModal.classList.add('active'); }
+      function showSetSelector(sets) { var html = sets.map(function(set, index) { return '<div class="set-select-btn" data-set-id="' + set.id + '"><div class="set-select-info"><span class="set-num">Подход #' + (index + 1) + '</span><span class="set-val">' + set.w + '<small>×</small>' + set.r + '</span></div><button class="del-set-edit" data-id="' + set.id + '" type="button">×</button></div>'; }).join(''); els.exSetSelector.innerHTML = html; els.exSetSelector.style.display = 'flex'; els.exSetSelector.style.flexDirection = 'column'; els.modalInputs.style.display = 'none'; els.exSetSelector.querySelectorAll('.set-select-btn').forEach(function(btn) { btn.onclick = function(e) { if (e.target.classList.contains('del-set-edit')) { e.stopPropagation(); deleteSetFromEdit(e.target.getAttribute('data-id')); return; } var setId = btn.getAttribute('data-set-id'); els.exSetSelector.querySelectorAll('.set-select-btn').forEach(function(b) { b.classList.remove('active'); }); btn.classList.add('active'); var workout = state.workouts.find(function(w) { return w.id === state.editingWorkoutId; }); var set = workout.sets.find(function(s) { return s.id === setId; }); if (set) { els.editW.value = set.w; els.editR.value = set.r; els.modalInputs.style.display = 'flex'; els.editW.focus(); state.selectedSetId = setId; } }; }); }
+      function deleteSetFromEdit(setId) { showConfirm('УДАЛИТЬ ПОДХОД', 'Вы уверены?', function() { var workout = state.workouts.find(function(w) { return w.id === state.editingWorkoutId; }); if (!workout) return; workout.sets = workout.sets.filter(function(s) { return s.id !== setId; }); recalcWorkoutMetrics(workout); saveData(); renderHistory(); openEdit(state.editingWorkoutId); showToast('Подход удалён', 1000); }); }
+      function recalcWorkoutMetrics(workout) { workout.vol = workout.sets.reduce(function(sum, s) { return sum + s.w * s.r; }, 0); workout.max = workout.sets.length > 0 ? Math.max.apply(null, workout.sets.map(function(s) { return s.w; })) : 0; }
+      function saveEdit() { if (!state.editingWorkoutId || !state.selectedSetId) return; var w = parseFloat(els.editW.value); var r = parseInt(els.editR.value); if (isNaN(w) || isNaN(r) || w <= 0 || r <= 0 || w > 500 || r > 100) { showToast('Проверьте значения веса и повторов'); return; } var workout = state.workouts.find(function(wk) { return wk.id === state.editingWorkoutId; }); if (!workout) return; var newName = els.editWorkoutName.value.trim().toUpperCase(); if (newName.length >= 2) workout.name = newName; var set = workout.sets.find(function(s) { return s.id === state.selectedSetId; }); if (set) { set.w = w; set.r = r; } recalcWorkoutMetrics(workout); saveData(); closeEditModal(); renderHistory(); renderProgress(); showToast('✓ Изменения сохранены'); }
+      function closeEditModal() { els.editModal.classList.remove('active'); state.editingWorkoutId = null; state.selectedExercise = null; state.selectedSetId = null; }
+      function deleteWorkout(id) { showConfirm('УДАЛИТЬ ТРЕНИРОВКУ', 'Это действие нельзя отменить. Продолжить?', function() { var idx = state.workouts.findIndex(function(w) { return w.id === id; }); if (idx !== -1) { state.workouts.splice(idx, 1); saveData(); renderHistory(); renderProgress(); showToast('Тренировка удалена'); } }); }
+
+      // ===== PROGRESS =====
+      function renderProgress() { 
+        var hasData = state.workouts.length > 0;
+        if (!hasData) { 
+          els.progressPanel.classList.add('hidden'); 
+          els.pEmpty.style.display = 'block'; 
+          return; 
+        }
+        els.progressPanel.classList.remove('hidden'); 
+        els.pEmpty.style.display = 'none'; 
+        calcPeriod(state.period, 0); 
+      }
+      function calcPeriod(type, offset) { offset = offset || 0; state.period = type; state.exerciseFilter = null; state.lastSelectedIndex = -1; els.mainTabs.forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-period') === type); }); var view = new Date(state.viewDate); if (type === 'week') view.setDate(view.getDate() + offset * 7); else if (type === 'month') view.setMonth(view.getMonth() + offset); else if (type === 'year') view.setFullYear(view.getFullYear() + offset); state.viewDate = view; var start, end, values, barLabels, dayDates, info; var workouts = state.workouts; if (type === 'week') { start = getWeekStart(view); end = new Date(start); end.setDate(start.getDate() + 7); values = [0,0,0,0,0,0,0]; dayDates = []; for (var i = 0; i < 7; i++) { var d = new Date(start); d.setDate(start.getDate() + i); dayDates.push(d); } workouts.forEach(function(w) { var d = new Date(w.date); if (d >= start && d < end) values[(d.getDay() + 6) % 7] += w.vol || 0; }); barLabels = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС']; info = formatDateRange(start, new Date(end.getTime() - 1)); } else if (type === 'month') { var year = view.getFullYear(), month = view.getMonth(); start = new Date(year, month, 1); end = new Date(year, month + 1, 0); var weeks = [], current = new Date(start); while (current <= end) { var weekStart = getWeekStart(current), weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6); var weekTonnage = 0; workouts.forEach(function(w) { var d = new Date(w.date); if (d >= weekStart && d <= weekEnd) weekTonnage += w.vol || 0; }); weeks.push({ start: new Date(weekStart), tonnage: weekTonnage }); current.setDate(current.getDate() + 7); } weeks = weeks.filter(function(w) { return w.start.getMonth() === month; }); values = weeks.map(function(w) { return w.tonnage; }); barLabels = weeks.map(function(w) { var e = new Date(w.start); e.setDate(e.getDate() + 6); return formatDateRange(w.start, e); }); dayDates = weeks.map(function(w) { return w.start.toISOString(); }); info = view.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }).toUpperCase(); } else if (type === 'year') { var year = view.getFullYear(); values = [0,0,0,0,0,0,0,0,0,0,0,0]; barLabels = ['ЯНВ','ФЕВ','МАР','АПР','МАЙ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ','ДЕК']; dayDates = barLabels.map(function(_, i) { return new Date(year, i, 1); }); workouts.forEach(function(w) { var d = new Date(w.date); if (d.getFullYear() === year) values[d.getMonth()] += w.vol || 0; }); info = year.toString(); } var total = values.reduce(function(a,b){return a+b;},0); var maxVal = Math.max(1, Math.max.apply(null, values)); var chartHtml = values.map(function(v, i) { var h = Math.max((v / maxVal) * 100, 4); var dateIso = dayDates[i] ? (typeof dayDates[i] === 'string' ? dayDates[i] : dayDates[i].toISOString()) : ''; return '<div class="bar-wrap" data-val="' + v + '" data-label="' + barLabels[i] + '" data-date="' + dateIso + '"><div class="chart-bar' + (v === 0 ? ' muted' : '') + '" style="height:' + h + '%"></div></div>'; }).join(''); els.chart.innerHTML = chartHtml; els.chartLabels.innerHTML = barLabels.map(function(l) { return '<span class="chart-label">' + l + '</span>'; }).join(''); els.pTotal.innerHTML = kettlebellSVG + formatTonnage(total); els.pPeriodLabel.textContent = info.toUpperCase(); updateExercisePanel(); }
+      function updateExercisePanel() { if (state.workouts.length === 0) { els.exerciseEmbed.style.display = 'none'; return; } var filterStart, filterEnd, rangeText; if (state.exerciseFilter) { filterStart = state.exerciseFilter.start; filterEnd = state.exerciseFilter.end; } else { var view = new Date(state.viewDate); if (state.period === 'week') { filterStart = getWeekStart(view); filterEnd = new Date(filterStart); filterEnd.setDate(filterEnd.getDate() + 6); filterEnd.setHours(23,59,59,999); } else if (state.period === 'month') { filterStart = new Date(view.getFullYear(), view.getMonth(), 1); filterEnd = new Date(view.getFullYear(), view.getMonth() + 1, 0); filterEnd.setHours(23,59,59,999); } else { filterStart = new Date(view.getFullYear(), 0, 1); filterEnd = new Date(view.getFullYear(), 11, 31, 23, 59, 59, 999); } } rangeText = (state.period === 'year') ? filterStart.getFullYear().toString() : formatDateRange(filterStart, filterEnd); els.exerciseRangeLabel.textContent = rangeText; var exTonnageMap = new Map(); state.workouts.forEach(function(w) { var d = new Date(w.date); if (d >= filterStart && d <= filterEnd) w.sets.forEach(function(s) { exTonnageMap.set(s.ex, (exTonnageMap.get(s.ex) || 0) + s.w * s.r); }); }); if (exTonnageMap.size === 0) { els.exerciseEmbedList.innerHTML = '<div class="empty" style="margin:0;padding:20px;font-size:11px;">НЕТ ДАННЫХ ЗА ПЕРИОД</div>'; els.exerciseEmbed.style.display = 'block'; return; } var entries = Array.from(exTonnageMap.entries()); entries.sort(function(a, b) { return b[1] - a[1]; }); var maxTonnage = entries[0][1]; var html = entries.map(function(entry) { var p = (entry[1] / maxTonnage) * 100; return '<div class="exercise-embed-item"><div class="exercise-embed-row"><span class="exercise-embed-name">' + entry[0] + '</span><span class="exercise-embed-value">' + formatTonnage(entry[1]) + '</span></div><div class="exercise-embed-bar"><div class="exercise-embed-fill" style="width:' + p + '%"></div></div></div>'; }).join(''); els.exerciseEmbedList.innerHTML = html; els.exerciseEmbed.style.display = 'block'; }
+
+      // ===== EVENTS =====
+      function bindEvents() {
+        els.navBtns.forEach(function(btn) { btn.addEventListener('click', function() { switchView(btn.getAttribute('data-target')); }); });
+        els.workoutNameInput.addEventListener('input', updateAddButtonState);
+        els.btnOpenTemplates.addEventListener('click', openTemplatesModal);
+        els.btnCloseTemplates.addEventListener('click', closeTemplatesModal);
+        els.tmplSearch.addEventListener('input', renderTemplatesList);
+        els.btnCreateTmplNew.addEventListener('click', function() { openTemplateEditor(); });        els.templatesList.addEventListener('click', function(e) { var useBtn = e.target.closest('.use-tmpl'); var editBtn = e.target.closest('.edit-tmpl'); var delBtn = e.target.closest('.del-tmpl'); if (useBtn) { loadTemplate(useBtn.getAttribute('data-id')); return; } if (editBtn) { openTemplateEditor(editBtn.getAttribute('data-id')); return; } if (delBtn) { deleteTemplate(delBtn.getAttribute('data-id')); return; } });
+        els.btnTmplEditorCancel.addEventListener('click', closeTemplateEditor);
+        els.btnTmplEditorSave.addEventListener('click', saveTemplateFromEditor);
+        els.templateEditorModal.addEventListener('click', function(e) { if (e.target === els.templateEditorModal) closeTemplateEditor(); });
+        els.btnTmplAddEx.addEventListener('click', tmplAddExercise);
+        els.tmplNewExName.addEventListener('keypress', function(e) { if (e.key === 'Enter') tmplAddExercise(); });
+        els.tmplNewExName.addEventListener('input', function() { renderAutocomplete(this, els.tmplAutocompleteList); });
+        els.tmplNewExName.addEventListener('focus', function() { renderAutocomplete(this, els.tmplAutocompleteList); });
+        els.tmplNewExName.addEventListener('blur', function() { hideAutocomplete(els.tmplAutocompleteList); });
+        els.tmplEditorExercises.addEventListener('input', function(e) { var t = e.target; if (t.dataset.ex !== void 0 && t.dataset.set !== void 0 && t.dataset.field) { tmplUpdateSet(parseInt(t.dataset.ex), parseInt(t.dataset.set), t.dataset.field, t.value); } });
+        els.tmplEditorExercises.addEventListener('click', function(e) { var delSet = e.target.closest('.tmpl-del-set'); var delEx = e.target.closest('.tmpl-del-ex'); var addSet = e.target.closest('.tmpl-add-set-btn'); if (delSet) { tmplRemoveSet(parseInt(delSet.dataset.ex), parseInt(delSet.dataset.set)); return; } if (delEx) { tmplRemoveExercise(parseInt(delEx.dataset.ex)); return; } if (addSet) { var idx = parseInt(addSet.dataset.ex); state.editorTemplate.exercises[idx].sets.push({w: 20, r: 10}); renderTemplateEditor(); } });
+        els.btnShowAddModal.addEventListener('click', openAddSetModal); 
+        els.btnAddCancel.addEventListener('click', closeAddSetModal); 
+        els.btnAddConfirm.addEventListener('click', addSetFromModal);
+        els.addSetModal.addEventListener('click', function(e) { if (e.target === els.addSetModal) closeAddSetModal(); });
+        els.modalInpEx.addEventListener('input', function() { renderAutocomplete(this, els.autocompleteList); });
+        els.modalInpEx.addEventListener('focus', function() { renderAutocomplete(this, els.autocompleteList); });
+        els.modalInpEx.addEventListener('blur', function() { hideAutocomplete(els.autocompleteList); });
+        els.modalInpEx.addEventListener('keypress', function(e) { if (e.key === 'Enter') { e.preventDefault(); els.modalInpW.focus(); } });
+        els.modalInpW.addEventListener('keypress', function(e) { if (e.key === 'Enter') { e.preventDefault(); els.modalInpR.focus(); } });
+        els.modalInpR.addEventListener('keypress', function(e) { if (e.key === 'Enter') { e.preventDefault(); addSetFromModal(); } });
+        els.btnSave.addEventListener('click', saveWorkout);
+        els.setsList.addEventListener('click', function(e) { var editBtn = e.target.closest('.ex-edit-btn'); var delSetBtn = e.target.closest('.del-set'); var addSetBtn = e.target.closest('.ex-add-set-btn'); if (editBtn) { var ex = editBtn.getAttribute('data-ex'); if (state.editingExercise === ex) { saveExerciseEdit(ex); } else { if (state.editingExercise) saveExerciseEdit(state.editingExercise); state.editingExercise = ex; renderSets(); } return; } if (delSetBtn) { removeSet(delSetBtn.getAttribute('data-id')); return; } if (addSetBtn) { addSetToExercise(addSetBtn.getAttribute('data-ex')); return; } });
+        
+        // Меню истории
+        els.menuBtn.addEventListener('click', toggleMenu);
+        els.menuExport.addEventListener('click', function(e) { e.stopPropagation(); if (state.workouts.length === 0) return; closeMenu(); exportData(); });
+        els.menuImport.addEventListener('click', function(e) { e.stopPropagation(); closeMenu(); els.fileImport.click(); });
+        els.menuClearAll.addEventListener('click', function(e) { e.stopPropagation(); if (state.workouts.length === 0) return; closeMenu(); clearAllHistory(); });
+        document.addEventListener('click', function(e) { if (!els.menuDropdown.contains(e.target) && e.target !== els.menuBtn) closeMenu(); });
+        
+        els.historyList.addEventListener('click', function(e) { 
+          var editBtn = e.target.closest('.btn-edit'); 
+          var toTmplBtn = e.target.closest('.btn-to-template'); 
+          var delBtn = e.target.closest('.btn-del'); 
+          var header = e.target.closest('.history-header'); 
+          var folderHeader = e.target.closest('.history-folder-header'); 
+          if (editBtn) { e.stopPropagation(); openEdit(parseInt(editBtn.getAttribute('data-id'))); return; } 
+          if (toTmplBtn) { e.stopPropagation(); var id = parseInt(toTmplBtn.getAttribute('data-id')); var workout = state.workouts.find(function(w) { return w.id === id; }); if (workout) createTemplateFromWorkout(workout); return; } 
+          if (delBtn) { e.stopPropagation(); deleteWorkout(parseInt(delBtn.getAttribute('data-id'))); return; } 
+          if (folderHeader) { e.stopPropagation(); var folder = folderHeader.closest('.history-folder'); if (folder) folder.classList.toggle('expanded'); return; } 
+          if (header) { e.stopPropagation(); var item = header.closest('.history-item'); if (item) item.classList.toggle('expanded'); } 
+        });
+        
+        els.historyPrev.addEventListener('click', function() { state.historyViewDate.setMonth(state.historyViewDate.getMonth() - 1); renderHistory(); });
+        els.historyNext.addEventListener('click', function() { state.historyViewDate.setMonth(state.historyViewDate.getMonth() + 1); renderHistory(); });
+        els.fileImport.addEventListener('change', function(e) { var file = e.target.files[0]; if (file) importData(file); });
+        els.btnEditSave.addEventListener('click', saveEdit); 
+        els.btnEditCancel.addEventListener('click', closeEditModal);
+        els.editModal.addEventListener('click', function(e) { if (e.target === els.editModal) closeEditModal(); });        confirmModal.btnCancel.addEventListener('click', hideConfirm);
+        confirmModal.btnOk.addEventListener('click', function() { if (confirmCallback) confirmCallback(); hideConfirm(); });
+        confirmModal.overlay.addEventListener('click', function(e) { if (e.target === confirmModal.overlay) hideConfirm(); });
+        els.mainTabs.forEach(function(tab) { tab.addEventListener('click', function() { var period = this.getAttribute('data-period'); state.period = period; state.exerciseFilter = null; state.lastSelectedIndex = -1; els.mainTabs.forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-period') === period); }); calcPeriod(period, 0); }); });
+        els.prevBtn.addEventListener('click', function() { state.exerciseFilter = null; state.lastSelectedIndex = -1; calcPeriod(state.period, -1); });
+        els.nextBtn.addEventListener('click', function() { state.exerciseFilter = null; state.lastSelectedIndex = -1; calcPeriod(state.period, 1); });
+        els.chartContainer.addEventListener('click', function(e) { var bar = e.target.closest('.bar-wrap'); if (!bar) { document.querySelectorAll('.chart-bar').forEach(function(b) { b.classList.remove('active'); }); els.chartTooltip.classList.remove('visible'); state.exerciseFilter = null; state.lastSelectedIndex = -1; updateExercisePanel(); return; } var bars = Array.from(document.querySelectorAll('.bar-wrap')); var index = bars.indexOf(bar); if (index === state.lastSelectedIndex) { document.querySelectorAll('.chart-bar').forEach(function(b) { b.classList.remove('active'); }); els.chartTooltip.classList.remove('visible'); state.exerciseFilter = null; state.lastSelectedIndex = -1; } else { document.querySelectorAll('.chart-bar').forEach(function(b) { b.classList.remove('active'); }); bar.querySelector('.chart-bar').classList.add('active'); var dateStr = bar.getAttribute('data-date'); var val = parseInt(bar.getAttribute('data-val')) || 0; var label = bar.getAttribute('data-label'); var dateInfo = ''; if (dateStr) { var d = new Date(dateStr); dateInfo = state.period === 'year' ? d.getFullYear() : d.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }).toUpperCase(); } els.chartTooltip.textContent = label + (dateInfo ? ' ' + dateInfo : '') + ': ' + formatTonnage(val); els.chartTooltip.classList.add('visible'); var filterStart, filterEnd; if (state.period === 'week') { var baseDate = new Date(dateStr); filterStart = new Date(baseDate); filterStart.setHours(0,0,0,0); filterEnd = new Date(baseDate); filterEnd.setHours(23,59,59,999); } else if (state.period === 'month') { var weekStart = new Date(dateStr); filterStart = new Date(weekStart); filterEnd = new Date(weekStart); filterEnd.setDate(filterEnd.getDate() + 6); filterEnd.setHours(23,59,59,999); } else if (state.period === 'year') { var monthDate = new Date(dateStr); filterStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1); filterEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0); filterEnd.setHours(23,59,59,999); } state.exerciseFilter = { start: filterStart, end: filterEnd }; state.lastSelectedIndex = index; } updateExercisePanel(); });
+        document.addEventListener('touchstart', function(e) { if (!els.chartContainer.contains(e.target)) els.chartTooltip.classList.remove('visible'); }, {passive: true});
+      }
+
+      // ===== INIT =====
+      function init() {
+        cacheElements(); 
+        loadData(); 
+        updateDate(); 
+        updateAddButtonState(); 
+        renderSets(); 
+        renderHistory(); 
+        renderProgress(); 
+        updateExercisePanel(); 
+        bindEvents(); 
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+    })();
+  </script>
+</body>
+</html>
