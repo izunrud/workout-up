@@ -14,10 +14,10 @@
   <title>WORKOUT UP · единый стиль</title>
   <style>
     /* ===== ЕДИНАЯ СИСТЕМА ДИЗАЙНА ===== */
-    :root {
     .icon-sm { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; vertical-align: middle; }
     .icon-md { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; vertical-align: middle; }
 
+    :root {
       --bg: #0B0B0B;
       --surface: #141414;
       --surface-elevated: #1C1C1C;
@@ -37,9 +37,9 @@
       --space-lg: 16px;
       --space-xl: 20px;
       
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
       
       --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
       --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
@@ -646,12 +646,15 @@
       visibility: visible;
     }
     .confirm-modal, .modal {
-      background: var(--surface-elevated);
+      background: rgba(28, 28, 28, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       padding: 24px 20px;
       width: 100%;
       max-width: 440px;
-      border-top: 1px solid var(--border-light);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
       max-height: 90vh;
       overflow-y: auto;
       transform: translateY(100%);
@@ -738,8 +741,7 @@
       transition: all 0.2s; 
     }
     .tab.active { background: var(--accent); color: #000; }
-    .nav-arrows { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .nav-arrows { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 12px; }
+    .nav-arrows { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 12px; margin-bottom: 14px; }
     .nav-btn-arrow { 
       background: var(--surface-elevated); 
       border: 1px solid var(--border); 
@@ -823,12 +825,12 @@
       right: 0; 
       display: grid; 
       grid-template-columns: repeat(3, 1fr); 
-      background: var(--surface); 
       border-top: 1px solid var(--border); 
       padding: 0 0 calc(env(safe-area-inset-bottom, 0px)) 0; 
       z-index: 200; 
-      backdrop-filter: blur(10px); 
-      background: rgba(20, 20, 20, 0.9); 
+      background: rgba(20, 20, 20, 0.85); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
     }
     .nav-btn { 
       display: flex; 
@@ -1539,6 +1541,11 @@
         els.nextBtn.addEventListener('click', function() { state.exerciseFilter = null; state.lastSelectedIndex = -1; calcPeriod(state.period, 1); });
         els.chartContainer.addEventListener('click', function(e) { var bar = e.target.closest('.bar-wrap'); if (!bar) { document.querySelectorAll('.chart-bar').forEach(function(b) { b.classList.remove('active'); }); els.chartTooltip.classList.remove('visible'); state.exerciseFilter = null; state.lastSelectedIndex = -1; updateExercisePanel(); return; } var bars = Array.from(document.querySelectorAll('.bar-wrap')); var index = bars.indexOf(bar); if (index === state.lastSelectedIndex) { document.querySelectorAll('.chart-bar').forEach(function(b) { b.classList.remove('active'); }); els.chartTooltip.classList.remove('visible'); state.exerciseFilter = null; state.lastSelectedIndex = -1; } else { document.querySelectorAll('.chart-bar').forEach(function(b) { b.classList.remove('active'); }); bar.querySelector('.chart-bar').classList.add('active'); var dateStr = bar.getAttribute('data-date'); var val = parseInt(bar.getAttribute('data-val')) || 0; var label = bar.getAttribute('data-label'); var dateInfo = ''; if (dateStr) { var d = new Date(dateStr); dateInfo = state.period === 'year' ? d.getFullYear() : d.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }).toUpperCase(); } els.chartTooltip.textContent = label + (dateInfo ? ' ' + dateInfo : '') + ': ' + formatTonnage(val); els.chartTooltip.classList.add('visible'); var filterStart, filterEnd; if (state.period === 'week') { var baseDate = new Date(dateStr); filterStart = new Date(baseDate); filterStart.setHours(0,0,0,0); filterEnd = new Date(baseDate); filterEnd.setHours(23,59,59,999); } else if (state.period === 'month') { var weekStart = new Date(dateStr); filterStart = new Date(weekStart); filterEnd = new Date(weekStart); filterEnd.setDate(filterEnd.getDate() + 6); filterEnd.setHours(23,59,59,999); } else if (state.period === 'year') { var monthDate = new Date(dateStr); filterStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1); filterEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0); filterEnd.setHours(23,59,59,999); } state.exerciseFilter = { start: filterStart, end: filterEnd }; state.lastSelectedIndex = index; } updateExercisePanel(); });
         document.addEventListener('touchstart', function(e) { if (!els.chartContainer.contains(e.target)) els.chartTooltip.classList.remove('visible'); }, {passive: true});
+        document.body.addEventListener('click', function(e) {
+          if (e.target.closest('button') || e.target.closest('.nav-btn') || e.target.closest('.history-header') || e.target.closest('.history-folder-header')) {
+            if (navigator.vibrate) navigator.vibrate(50);
+          }
+        });
       }
 
       // ===== INIT =====
@@ -1560,7 +1567,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        navigator.serviceWorker.register('./sw.js').then(function(registration) {
           console.log('Service Worker зарегистрирован с областью:', registration.scope);
         }, function(err) {
           console.log('Ошибка регистрации Service Worker:', err);

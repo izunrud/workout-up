@@ -4,10 +4,10 @@
 const CACHE_NAME = 'workout-up-cache-v1';
 // Список ресурсов, которые необходимо закэшировать при установке
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png'
 ];
 
 // Установка SW и кэширование статических ресурсов

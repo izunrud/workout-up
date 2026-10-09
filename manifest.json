@@ -2,7 +2,7 @@
   "name": "WORKOUT UP",
   "short_name": "WorkoutUp",
   "description": "Трекер тренировок: история, тоннаж, шаблоны, статистика",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0B0B0B",
   "theme_color": "#0B0B0B",
