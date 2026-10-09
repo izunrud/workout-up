@@ -1,7 +1,7 @@
 // Service Worker для WORKOUT UP
 // Стратегия: Cache-First для статики, оффлайн-режим, localStorage не затрагивается.
 
-const CACHE_NAME = 'workout-up-cache-v2';
+const CACHE_NAME = 'workout-up-cache-v3';
 // Список ресурсов, которые необходимо закэшировать при установке
 const urlsToCache = [
   './',
@@ -12,11 +12,19 @@ const urlsToCache = [
 
 // Установка SW и кэширование статических ресурсов
 self.addEventListener('install', event => {
+  const cacheBuster = '?v=' + Date.now();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Кэш открыт, добавляются ресурсы:', urlsToCache);
-        return cache.addAll(urlsToCache);
+        return Promise.all(
+          urlsToCache.map(url => {
+            return fetch(url + cacheBuster).then(response => {
+              if (!response.ok) throw new Error('Request failed');
+              return cache.put(url, response);
+            });
+          })
+        );
       })
       .catch(err => {
         console.error('Ошибка при добавлении в кэш:', err);
