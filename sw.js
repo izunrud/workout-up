@@ -1,7 +1,7 @@
 // Service Worker для WORKOUT UP
 // Стратегия: Cache-First для статики, оффлайн-режим, localStorage не затрагивается.
 
-const CACHE_NAME = 'workout-up-cache-v1';
+const CACHE_NAME = 'workout-up-cache-v2';
 // Список ресурсов, которые необходимо закэшировать при установке
 const urlsToCache = [
   './',
